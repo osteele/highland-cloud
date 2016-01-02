@@ -34,11 +34,11 @@ module.exports = (req, res) ->
           outputSpeech:
             type: 'PlainText'
             text: 'okay'
-          card:
-            type: 'Simple'
-            title: 'Xmas Lights'
-            content: 'Some commands are "Tell the Christmas tree lights to turn on".'
-          shouldEndSession: false
+          # card:
+          #   type: 'Simple'
+          #   title: 'Xmas Lights'
+          #   content: 'Some commands are "Tell the Christmas tree lights to turn on".'
+          shouldEndSession: true
 
     when 'SessionEndedRequest'
       res.json
