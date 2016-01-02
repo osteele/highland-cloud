@@ -22,6 +22,9 @@ module.exports = (req, res) ->
       switch intent
         when ['TurnOn', 'TurnOff', 'Pause', 'Resume']
           console.info 'intent', intent
+        else
+          console.error "Unknown intent: #{intent}"
+          return res.status(500).end()
       res.json
         version: '1.0'
         response:
@@ -33,3 +36,11 @@ module.exports = (req, res) ->
             title: 'Xmas Lights'
             content: 'Some commands are "Tell the Christmas tree lights to turn on".'
           shouldEndSession: false
+
+    when 'SessionEndedRequest'
+      res.json
+        version: '1.0'
+
+    else
+      console.error "Unknown request type: #{request.type}"
+      return res.status(500).end()
