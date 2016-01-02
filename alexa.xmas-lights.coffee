@@ -19,12 +19,15 @@ module.exports = (req, res) ->
 
     when 'IntentRequest'
       intent = request.intent.name
-      switch intent
-        when ['TurnOn', 'TurnOff', 'Pause', 'Resume']
-          console.info 'intent', intent
-        else
-          console.error "Unknown intent: #{intent}"
-          return res.status(500).end()
+      if action = IntentActions[intent]
+        console.info 'intent', intent, action
+        sendMessage {type: 'action', action}, (err, ok) ->
+          if err
+            console.error 'rabbit.publish failed'
+            consle.error err
+      else
+        console.error "Unknown intent: #{intent}"
+        return res.status(500).end()
       res.json
         version: '1.0'
         response:
@@ -44,3 +47,20 @@ module.exports = (req, res) ->
     else
       console.error "Unknown request type: #{request.type}"
       return res.status(500).end()
+
+IntentActions = {TurnOn: 'on', TurnOff: 'off', Pause: 'stop', Resume: 'resume', NextScene: 'next'}
+
+RABBIT_URL = process.env.RABBIT_URL or process.env.CLOUDAMQP_URL
+
+PublicationChannel = null
+
+require('amqplib').connect RABBIT_URL
+.then (conn) ->
+  conn.createConfirmChannel().then (ch) ->
+    PublicationChannel = ch
+
+sendMessage = (content) ->
+  buffer = new Buffer JSON.stringify content or {}
+  PublicationChannel.publish '', 'lights', buffer,
+    contentType: 'application/json'
+    persistent : true
