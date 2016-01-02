@@ -48,7 +48,7 @@ module.exports = (req, res) ->
       console.error "Unknown request type: #{request.type}"
       return res.status(500).end()
 
-IntentActions = {TurnOn: 'on', TurnOff: 'off', Pause: 'stop', Resume: 'resume', NextScene: 'next'}
+IntentActions = {TurnOn: 'on', TurnOff: 'off', Pause: 'stop', Resume: 'resume', NextScene: 'next', Spin: 'spin'}
 
 RABBIT_URL = process.env.RABBIT_URL or process.env.CLOUDAMQP_URL
 
