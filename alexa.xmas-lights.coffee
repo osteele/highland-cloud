@@ -50,17 +50,25 @@ module.exports = (req, res) ->
 
 IntentActions = {TurnOn: 'on', TurnOff: 'off', Pause: 'stop', Resume: 'resume', NextScene: 'next', Spin: 'spin'}
 
-RABBIT_URL = process.env.RABBIT_URL or process.env.CLOUDAMQP_URL
+MQTT_URL = process.env.MQTT_URL or process.env.CLOUDMQTT_URL or process.env.CLOUDAMQP_URL or 'mqtt://localhost:1883'
+MQTT_TOPIC = 'xmas-lights'
 
-PublicationChannel = null
+mqtt = require 'mqtt'
+url = require 'url'
 
-require('amqplib').connect RABBIT_URL
-.then (conn) ->
-  conn.createConfirmChannel().then (ch) ->
-    PublicationChannel = ch
+withMqttConnection = (mqttUrl, fn) ->
+  urlObj = url.parse mqttUrl
+  if urlObj.auth
+    [username, password] = (urlObj.auth or ':').split ':', 2
+    username = urlObj.path.slice(1) + ':' + username if urlObj.pathname
+    urlObj.pathname = null
+    urlObj.auth = username + ':' + password if username
+    urlObj = url.format urlObj
+  client = mqtt.connect urlObj
+  client.on 'connect', ->
+    fn client, -> client.end()
 
-sendMessage = (content) ->
-  buffer = new Buffer JSON.stringify content or {}
-  PublicationChannel.publish '', 'lights', buffer,
-    contentType: 'application/json'
-    persistent : true
+sendMessage = (payload) ->
+  payload = JSON.stringify payload or {}
+  withMqttConnection MQTT_URL, (client, done) ->
+    client.publish MQTT_TOPIC, payload, {qos: 1, retain: true}, done
