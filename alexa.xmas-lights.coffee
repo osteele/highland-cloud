@@ -48,7 +48,16 @@ module.exports = (req, res) ->
       console.error "Unknown request type: #{request.type}"
       return res.status(500).end()
 
-IntentActions = {TurnOn: 'on', TurnOff: 'off', Pause: 'stop', Resume: 'resume', NextScene: 'next', Spin: 'spin'}
+IntentActions =
+  TurnOn   : 'on'
+  TurnOff  : 'off'
+  Pause    : 'stop'
+  Resume   : 'resume'
+  NextScene: 'next'
+  Spin     : 'spin'
+  Reverse  : 'spin'
+  SlowDown : 'slower'
+  SpeedUp  : 'faster'
 
 MQTT_URL = process.env.MQTT_URL or process.env.CLOUDMQTT_URL or process.env.CLOUDAMQP_URL or 'mqtt://localhost:1883'
 MQTT_TOPIC = 'xmas-lights'
