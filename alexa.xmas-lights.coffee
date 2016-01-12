@@ -1,8 +1,8 @@
 module.exports = (req, res) ->
-  request = req.body.request
-  console.log request
+  request = req.body?.request
+  console.log 'request', request
 
-  switch request.type
+  switch request?.type
 
     when 'LaunchRequest'
       res.json
