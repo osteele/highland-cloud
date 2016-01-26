@@ -2,6 +2,7 @@ from publish_message import publish
 import logging
 from config import config
 
+API_VERSION = '7'
 IFTTT_TOKEN = config['IFTTT_TOKEN']
 
 logger = logging.getLogger()
@@ -9,7 +10,7 @@ logger.setLevel(logging.INFO)
 
 
 def handler(event, context):
-    logger.info('Version 6')
+    logger.info('Version %s', API_VERSION)
     logger.info('Received event: {}'.format(event))
 
     token = event.get('token')
@@ -19,4 +20,4 @@ def handler(event, context):
 
     action = event['action']
     publish('action', action=action)
-    return "action: %s" % action
+    return dict(version=API_VERSION, action=action)
