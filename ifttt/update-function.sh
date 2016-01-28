@@ -4,7 +4,7 @@ FUNCTION_NAME=highland-ifttt
 ZIPFILE=ifttt.zip
 
 rm -f $ZIPFILE
-zip -r $ZIPFILE *.py *.json
+zip -r $ZIPFILE *.py
 find paho ! -name \*.pyc -print | xargs zip ifttt.zip
 
 aws lambda update-function-code \
