@@ -7,8 +7,6 @@ import paho.mqtt.publish as mqtt_publish
 logging.basicConfig(level=logging.WARNING)
 logger = logging.getLogger('messages')
 
-TOPIC = 'xmas-lights'
-
 
 def configure(url_s):
     global mqtt_config
@@ -27,10 +25,10 @@ def configure(url_s):
     mqtt_config = namedtuple('MqtttConfig', ('hostname', 'auth', 'port'))(hostname, auth, port)
 
 
-def publish(mtype, **payload):
-    payload['type'] = mtype
-    logger.info('publish topic=%s payload=%s', TOPIC, payload)
-    mqtt_publish.single(TOPIC,
+def publish(event_type, device=None, command=None):
+    payload = {'type': event_type, 'action': command}
+    logger.info('publish device=%s payload=%s', device, payload)
+    mqtt_publish.single(device,
                         payload=json.dumps(payload),
                         qos=1,
                         retain=True,

@@ -19,7 +19,8 @@ def handler(event, context):
         logger.error("Request token (%s) does not match expected", token)
         raise Exception("Invalid request token")
 
-    action = event['action']
+    command = event['command']
+    device = event['device']
     configure(MQTT_URL)
-    publish('action', action=action)
-    return dict(version=API_VERSION, action=action)
+    publish('action', device=device, command=command)
+    return dict(version=API_VERSION, command=command)
