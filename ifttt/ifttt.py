@@ -1,9 +1,10 @@
-from publish_message import publish
 import logging
+from messages import publish, configure
 from config import config
 
 API_VERSION = '7'
 IFTTT_TOKEN = config['IFTTT_TOKEN']
+MQTT_URL = config['MQTT_URL']
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -19,5 +20,6 @@ def handler(event, context):
         raise Exception("Invalid request token")
 
     action = event['action']
+    configure(MQTT_URL)
     publish('action', action=action)
     return dict(version=API_VERSION, action=action)
