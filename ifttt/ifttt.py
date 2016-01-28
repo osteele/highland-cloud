@@ -1,7 +1,9 @@
+from publish_message import publish
 import logging
-from publish_message import publish, configure
+from config import config
 
 API_VERSION = '7'
+IFTTT_TOKEN = config['IFTTT_TOKEN']
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -11,15 +13,11 @@ def handler(event, context):
     logger.info('Version %s', API_VERSION)
     logger.info('Received event: {}'.format(event))
 
-    ifttt_token = event['env']['IFTTT_TOKEN']
-    mqtt_url = event['env']['MQTT_URL']
-
-    token = event['token']
-    if token != ifttt_token:
+    token = event.get('token')
+    if token != IFTTT_TOKEN:
         logger.error("Request token (%s) does not match expected", token)
         raise Exception("Invalid request token")
 
     action = event['action']
-    configure(mqtt_url)
     publish('action', action=action)
     return dict(version=API_VERSION, action=action)

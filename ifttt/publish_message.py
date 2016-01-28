@@ -1,37 +1,16 @@
 import json
 import logging
-from collections import namedtuple
-from urlparse import urlparse
 import paho.mqtt.publish as mqtt_publish
 import mqtt_config
 
 logging.basicConfig(level=logging.WARNING)
 logger = logging.getLogger('messages')
 
-TOPIC = 'xmas-lights'
-
-
-def configure(url_s):
-    global mqtt_config
-    url = urlparse(url_s)
-
-    hostname = url.hostname
-    username = url.username
-    password = url.password
-
-    if url.path:
-        username = url.path[1:] + ':' + username
-
-    auth = dict(username=username, password=password) if username else None
-    port = 1883
-
-    mqtt_config = namedtuple('MqtttConfig', ('hostname', 'auth', 'port'))(hostname, auth, port)
-
 
 def publish(mtype, **payload):
     payload['type'] = mtype
-    logger.info('publish topic=%s payload=%s', TOPIC, payload)
-    mqtt_publish.single(TOPIC,
+    logger.info('publish topic=%s payload=%s', mqtt_config.TOPIC, payload)
+    mqtt_publish.single(mqtt_config.TOPIC,
                         payload=json.dumps(payload),
                         qos=1,
                         retain=True,
