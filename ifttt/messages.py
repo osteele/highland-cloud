@@ -25,10 +25,9 @@ def configure(url_s):
     mqtt_config = namedtuple('MqtttConfig', ('hostname', 'auth', 'port'))(hostname, auth, port)
 
 
-def publish(event_type, device=None, **payload):
-    payload['type'] = event_type
-    logger.info('publish device=%s payload=%s', device, payload)
-    mqtt_publish.single(device,
+def publish(topic, **payload):
+    logger.info('publish topic=%s payload=%s', topic, payload)
+    mqtt_publish.single(topic,
                         payload=json.dumps(payload),
                         qos=1,
                         retain=True,
@@ -36,3 +35,14 @@ def publish(event_type, device=None, **payload):
                         auth=mqtt_config.auth,
                         port=mqtt_config.port,
                         client_id='')
+
+
+def publish_command(device=None, **payload):
+    payload['type'] = 'action'
+    publish(device, **payload)
+
+
+# deviceName deviceId timestamp isStateChange source value event
+def publish_event(payload):
+    topic = '/%(site)s/%(room)s/%(deviceId)s/%(event)s/%(value)s' % payload
+    publish(topic, **payload)
