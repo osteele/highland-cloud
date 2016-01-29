@@ -25,8 +25,8 @@ def configure(url_s):
     mqtt_config = namedtuple('MqtttConfig', ('hostname', 'auth', 'port'))(hostname, auth, port)
 
 
-def publish(event_type, device=None, command=None):
-    payload = {'type': event_type, 'action': command}
+def publish(event_type, device=None, **payload):
+    payload['type'] = event_type
     logger.info('publish device=%s payload=%s', device, payload)
     mqtt_publish.single(device,
                         payload=json.dumps(payload),
