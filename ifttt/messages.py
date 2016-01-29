@@ -37,7 +37,13 @@ def publish(topic, **payload):
                         client_id='')
 
 
-def publish_command(device=None, **payload):
+def publish_command(**payload):
+    # new-style command
+    topic = '/%(site)/device/%(device)/command' % payload
+    publish(topic, **payload)
+
+    # old-style action
+    device = payload['device']
     payload['type'] = 'action'
     publish(device, **payload)
 
