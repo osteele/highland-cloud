@@ -19,8 +19,8 @@ handleDiscoveryEvent = (event, context) ->
     manufacturerName: 'osteele'
     modelName: 'OS01'
     version: 'VER01'
-    friendlyName: 'Christmas Lights'
-    friendlyDescription: 'the Christmas Tree lights'
+    friendlyName: 'Christmas tree'
+    friendlyDescription: 'Christmas Tree lights'
     isReachable: true
     additionalApplianceDetails: {}
 
