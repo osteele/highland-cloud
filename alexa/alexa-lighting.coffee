@@ -31,7 +31,6 @@ handleDiscoveryEvent = (event, context) ->
     header: headers
     payload: payload
 
-  logger.info 'discovery ->', result
   context.succeed result
 
 handleControlEvent = (event, context) ->
@@ -63,7 +62,6 @@ handleControlEvent = (event, context) ->
           header: headers
           payload: payload
 
-        logger.info 'control ->', result
         context.succeed result
 
       messages.sendMessage {type: 'action', action: action}, sendResponse
@@ -87,7 +85,6 @@ handleSystemEvent = (event, context) ->
         header: headers
         payload: payload
 
-      logger.info 'health ->', result
       context.succeed result
 
     else
