@@ -50,5 +50,5 @@ def publish_command(**payload):
 
 # deviceName deviceId timestamp isStateChange source value event
 def publish_event(payload):
-    topic = '/%(site)s/device/%(deviceId)s/event/%(event)s/%(value)s' % payload
+    topic = '/%(site)s/device/%(deviceId)s/%(event)s/%(value)s' % payload
     publish(topic, **payload)
