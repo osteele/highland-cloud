@@ -17,4 +17,10 @@ nzip -ur $ZIPFILE node_modules
 
 aws lambda update-function-code \
   --function-name $FUNCTION_NAME \
-  --zip-file fileb://$ZIPFILE
+  --zip-file fileb://$ZIPFILE &
+
+aws lambda update-function-code \
+  --function-name highland-alexa-skill \
+  --zip-file fileb://$ZIPFILE &
+
+wait
